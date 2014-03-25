@@ -22,12 +22,14 @@ class RemoteDataTestCase(test_utils.BokehServerTestCase):
                       '/defaultuser/FB.hdf5', 
                       '/defaultuser/MSFT.hdf5', 
                       '/defaultuser/AAPL.hdf5',
-                      '/defaultuser/volume.table'])
+                      '/defaultuser/volume.table',
+                      '/defaultuser/array.table'
+                  ])
         assert result == set(sources)
     def test_line_downsample(self):
         config = tempfile.mkdtemp()
         s = Server(configdir=config)
-        url = "http://localhost:5006/bokeh/data2/defaultuser/defaultuser/AAPL.hdf5"
+        url = "http://localhost:5006/bokeh/data/defaultuser/defaultuser/AAPL.hdf5"
         params = ('close', 'date', ['close', 'open', 'date'], 
                   [1000 * time.mktime(dt.datetime(2012,1,1).timetuple()),
                    1000 * time.mktime(dt.datetime(2013,1,1).timetuple())],

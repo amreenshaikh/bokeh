@@ -96,8 +96,10 @@ def get_doc_api_key(docid):
         return jsonify({'readonlyapikey' : doc.readonlyapikey})
     else:
         return abort(401)
-
-@bokeh_app.route('/bokeh/userinfo/')
+        
+#security issues?
+@bokeh_app.route('/bokeh/userinfo/', methods=['GET', 'OPTIONS'])
+@crossdomain(origin="*", headers=['BOKEH-API-KEY', 'Continuum-Clientid'])
 def get_user():
     bokehuser = bokeh_app.current_user()
     if not bokehuser:

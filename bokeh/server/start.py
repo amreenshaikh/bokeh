@@ -21,7 +21,7 @@ from flask import Flask
 
 # import objects so that we can resolve them
 from .. import protocol, objects, glyphs
-
+import plotting
 from .app import bokeh_app
 from .models import user
 from . import services
@@ -42,7 +42,7 @@ app = Flask("bokeh.server")
 def prepare_app(backend, single_user_mode=True, data_directory=None):
     # must import views before running apps
     from .views import deps
-
+    
     if backend['type'] == 'redis':
         import redis
         rhost = backend.get('redis_host', '127.0.0.1')
@@ -70,12 +70,14 @@ def prepare_app(backend, single_user_mode=True, data_directory=None):
     bokeh_app.setup(backend, bbstorage, servermodel_storage, 
                     authentication, datamanager)
 
-    app.register_blueprint(bokeh_app)
 
     # where should we be setting the secret key....?
     if not app.secret_key:
         app.secret_key = str(uuid.uuid4())
-
+        
+def register_blueprint():
+    app.register_blueprint(bokeh_app)
+    
 def make_default_user(bokeh_app):
     bokehuser = user.new_user(bokeh_app.servermodel_storage, "defaultuser",
                               str(uuid.uuid4()), apikey='nokey', docs=[])
